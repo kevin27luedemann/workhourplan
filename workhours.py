@@ -237,6 +237,7 @@ def main():
             in_time(path+name,ts)
         if sys.argv[1] == "out":
             out_time(path+name,ts)
+            logg_daywork(path+name,ts)
         if sys.argv[1] == "pausein" or sys.argv[1] == "pin":
             pause_in_time(path+name,ts)
         if sys.argv[1] == "pauseout" or sys.argv[1] == "pout":
