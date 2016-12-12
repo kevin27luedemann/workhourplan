@@ -86,6 +86,7 @@ def in_time(name,ts):
         assert c == 1 , "not clocked out"
     logg = "{}\t{}\t{}\n".format(ts,formated_time,"0")
     append_time(name,logg)
+    formated_time = dt.datetime.fromtimestamp(ts).strftime('%H:%M:%S_%d.%m.%y')
     print "In time {} logged".format(formated_time)
 
 def out_time(name,ts):
@@ -184,6 +185,8 @@ def logg_daywork(name,ts):
     formated_time = dt.datetime.fromtimestamp(ts).strftime('%H:%M:%S_%d.%m.%y')
     formated_date = dt.datetime.fromtimestamp(ts).strftime('%y%m%d')
     work, pause = calculate_dayworktime(name+"_"+formated_date+".txt")
+    work  = work-3600
+    pause = pause-3600
     work_stamp = dt.datetime.fromtimestamp(work).strftime('%H:%M:%S')
     pause_stamp = dt.datetime.fromtimestamp(pause).strftime('%H:%M:%S')
     total_time = work+pause
@@ -207,6 +210,8 @@ def print_daywork(name,ts):
             work, pause = calculate_dayworktime(name_date)
         else:
             work, pause = calculate_dayworktime_before_end(name_date,ts)
+    work  = work-3600
+    pause = pause-3600
     work_stamp = dt.datetime.fromtimestamp(work).strftime('%H:%M:%S')
     pause_stamp = dt.datetime.fromtimestamp(pause).strftime('%H:%M:%S')
     total_time = work+pause
