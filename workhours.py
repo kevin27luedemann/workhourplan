@@ -186,15 +186,15 @@ def logg_daywork(name,ts):
     formated_date = dt.datetime.fromtimestamp(ts).strftime('%y%m%d')
     work, pause = calculate_dayworktime(name+"_"+formated_date+".txt")
     total_time = work+pause
+    work_pause_ratio = work/pause
+    work_percent = work/total_time*100.0
+    pause_percent = pause/total_time*100.0
     total_time = total_time -3600
     work  = work-3600
     pause = pause-3600
     work_stamp = dt.datetime.fromtimestamp(work).strftime('%H:%M:%S')
     pause_stamp = dt.datetime.fromtimestamp(pause).strftime('%H:%M:%S')
     total_time_stamp = dt.datetime.fromtimestamp(total_time).strftime('%H:%M:%S')
-    work_pause_ratio = work/pause
-    work_percent = work/total_time*100.0
-    pause_percent = pause/total_time*100.0
     logg = "{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\n".format(ts,formated_time,work,work_stamp,pause,pause_stamp,total_time,total_time_stamp,work_pause_ratio,work_percent,pause_percent)
     #logg = "{}\t{}\t{}\t{}\t{}\t{}\n".format(ts,formated_time,work,work_stamp,pause,pause_stamp)
     append_time(name+".txt",logg)
@@ -212,15 +212,15 @@ def print_daywork(name,ts):
         else:
             work, pause = calculate_dayworktime_before_end(name_date,ts)
     total_time = work+pause
+    work_pause_ratio = work/pause
+    work_percent = work/total_time*100.0
+    pause_percent = pause/total_time*100.0
     total_time = total_time-3600
     work  = work-3600
     pause = pause-3600
     work_stamp = dt.datetime.fromtimestamp(work).strftime('%H:%M:%S')
     pause_stamp = dt.datetime.fromtimestamp(pause).strftime('%H:%M:%S')
     total_time_stamp = dt.datetime.fromtimestamp(total_time).strftime('%H:%M:%S')
-    work_pause_ratio = work/pause
-    work_percent = work/total_time*100.0
-    pause_percent = pause/total_time*100.0
     logg = "{}\t{}\t{}\t{}\t{:.02f}\t{:.01f}%\t{:.01f}%\n".format(formated_time,work_stamp,pause_stamp,total_time_stamp,work_pause_ratio,work_percent,pause_percent)
     print logg,
 
