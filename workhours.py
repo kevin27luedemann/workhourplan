@@ -234,7 +234,7 @@ def workhours(name, hours_per_month):
 def main():
     ts = ti.time()
     path = os.path.dirname(os.path.realpath(__file__))
-    print path
+    #print path
     path = path + "/hours/"
     #path = "/home/upgp/kevin/hours/"
     name = "worktime_dt"
