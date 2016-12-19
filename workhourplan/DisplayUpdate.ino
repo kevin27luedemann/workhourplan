@@ -23,9 +23,17 @@ void DisplayUpdate(const DateTime& dt){
   gb.display.print(F("\20"));
   printtime(dt,0);
   gb.display.print(F("\n"));
-  for(uint8_t i=0; i<stampcounter;i++){
-    printtime(stamp[i],0);
-    gb.display.print(F("\n"));
+  if(stampcounter < 5){
+    for(uint8_t i=startposition; i<startposition+stampcounter;i++){
+      printtime(stamp[i],0);
+      gb.display.print(F("\n"));
+    }
+  }
+  else {
+    for(uint8_t i=startposition; i<endposition;i++){
+      printtime(stamp[i],0);
+      gb.display.print(F("\n"));
+    }
   }
   //print footer
   //printtime(dt,0);
