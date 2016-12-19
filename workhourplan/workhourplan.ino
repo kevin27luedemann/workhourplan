@@ -1,5 +1,5 @@
 //standart gamebuino stuff
-//#define DEMO
+#define DEMO
 #include <SPI.h>
 #include <Gamebuino.h>
 Gamebuino gb;
@@ -15,9 +15,11 @@ void printtime(const DateTime& dt, uint8_t mode);
 void DisplayUpdate(const DateTime& dt);
 
 DateTime now(16,12,18,16,2,15);
-DateTime stamp[5];
+#define MAXSTAMP 10
+DateTime stamp[MAXSTAMP];
 uint8_t stampcounter;
 TimeSpan seconds(1);
+uint8_t startposition,endposition;
 
 void setup(){
   gb.begin();
@@ -27,6 +29,8 @@ void setup(){
     rtc.begin();
   #endif
   stampcounter = 0;
+  startposition = 0;
+  endposition = 5;
 }
 
 void loop(){
@@ -45,10 +49,37 @@ void loop(){
       #endif
     }
     if(gb.buttons.pressed(BTN_A)){
-      gb.popup(F("Time Saved"), FPS);
-      if(stampcounter < 5){
+		gb.popup(F("Time Saved"), FPS);
+		#ifndef DEMO
+		  gb.sound.playtick()
+		#endif
+      if(stampcounter < MAXSTAMP){
         stamp[stampcounter] = now;
         stampcounter += 1;
+        if((endposition < MAXSTAMP) && (endposition <stampcounter)){
+		    startposition ++;
+		    endposition ++;
+        }
+      }
+    }
+    if(gb.buttons.pressed(BTN_DOWN)){
+		gb.popup(F("Down"), FPS);
+		#ifndef DEMO
+		  gb.sound.playTick()
+		#endif
+      if((endposition < MAXSTAMP) && (endposition <stampcounter)){
+		  startposition ++;
+		  endposition ++;
+      }
+    }
+    if(gb.buttons.pressed(BTN_UP)){
+		gb.popup(F("Up"), FPS);
+		#ifndef DEMO
+		  gb.sound.playTick()
+		#endif
+      if((startposition > 0)){
+		  startposition --;
+		  endposition --;
       }
     }
     //DateTime now = rtc.now();
