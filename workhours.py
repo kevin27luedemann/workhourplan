@@ -5,6 +5,8 @@ import sys
 import time as ti
 import datetime as dt
 from pathlib import Path
+import os
+import sys
 
 """
 Legend of workhour time (day) syntax:
@@ -231,7 +233,10 @@ def workhours(name, hours_per_month):
 
 def main():
     ts = ti.time()
-    path = "/home/upgp/kevin/hours/"
+    path = os.path.dirname(os.path.realpath(__file__))
+    print path
+    path = path + "/hours/"
+    #path = "/home/upgp/kevin/hours/"
     name = "worktime_dt"
     hours_per_month = 40
     if len(sys.argv) > 1:
