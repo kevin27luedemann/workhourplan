@@ -1,5 +1,6 @@
 //standart gamebuino stuff
-#define DEMO
+//#define DEMO
+#include <tinyFAT.h>
 #include <SPI.h>
 #include <Gamebuino.h>
 Gamebuino gb;
@@ -14,23 +15,29 @@ char daysOfTheWeek[7][12] = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursd
 void printtime(const DateTime& dt, uint8_t mode);
 void DisplayUpdate(const DateTime& dt);
 
-DateTime now(16,12,18,16,2,15);
-#define MAXSTAMP 10
-DateTime stamp[MAXSTAMP];
-uint8_t stampcounter;
+DateTime rightnow(16,12,18,16,2,15);
+DateTime last, now;
 TimeSpan seconds(1);
-uint8_t startposition,endposition;
+#define MAXSTAMP 20
+uint32_t stamps[MAXSTAMP];
+uint8_t stampcounter;
+uint32_t intime;
 
 void setup(){
   gb.begin();
   gb.titleScreen(F("Workhour Plan"));
   gb.battery.show = true;
+  /*
+  gb.backlight.automatic = false;
+  gb.backlight.set(0);
+  gb.display.clear();
+  gb.display.persistence = true;
+  */
   #ifndef DEMO
-    rtc.begin();
+  rtc.begin();
   #endif
   stampcounter = 0;
-  startposition = 0;
-  endposition = 5;
+  intime = 0;
 }
 
 void loop(){
@@ -38,52 +45,40 @@ void loop(){
     //pause the game if C is pressed
     if(gb.buttons.pressed(BTN_C)){
       gb.titleScreen(F("Workhour Plan"));
-      gb.battery.show = true;
-      //gb.display.fontSize = 2;
+      /*
+      gb.backlight.automatic = true;
+      gb.backlight.set(128);
+      gb.persistance = false;
+      */
     }
     if((gb.frameCount%20) == 0){
       #ifndef DEMO
-      now = rtc.now();
+      rightnow = rtc.now();
       #else
-      now = now + seconds;
+      rightnow = rightnow + seconds;
       #endif
     }
     if(gb.buttons.pressed(BTN_A)){
-		gb.popup(F("Time Saved"), FPS);
-		#ifndef DEMO
-		  gb.sound.playtick()
-		#endif
+      #ifndef DEMO
+      gb.sound.playTick();
+      #endif
       if(stampcounter < MAXSTAMP){
-        stamp[stampcounter] = now;
-        stampcounter += 1;
-        if((endposition < MAXSTAMP) && (endposition <stampcounter)){
-		    startposition ++;
-		    endposition ++;
+        stamps[stampcounter] = rightnow.unixtime();
+        if((stampcounter%2 == 1) && stampcounter != 0){
+          intime += (stamps[stampcounter]-stamps[stampcounter-1]);
+          gb.popup(F("Out Clocked"), FPS);
         }
+        else {
+          gb.popup(F("In Clocked"), FPS);
+        }
+        stampcounter ++;
       }
     }
-    if(gb.buttons.pressed(BTN_DOWN)){
-		gb.popup(F("Down"), FPS);
-		#ifndef DEMO
-		  gb.sound.playTick()
-		#endif
-      if((endposition < MAXSTAMP) && (endposition <stampcounter)){
-		  startposition ++;
-		  endposition ++;
-      }
+    if(gb.buttons.held(BTN_B,FPS*3)){
+      gb.popup(F("Saved to SD (not)"), FPS);
+
     }
-    if(gb.buttons.pressed(BTN_UP)){
-		gb.popup(F("Up"), FPS);
-		#ifndef DEMO
-		  gb.sound.playTick()
-		#endif
-      if((startposition > 0)){
-		  startposition --;
-		  endposition --;
-      }
-    }
-    //DateTime now = rtc.now();
-    DisplayUpdate(now);
+    DisplayUpdate(rightnow);
   }
 }
 
