@@ -18,10 +18,10 @@ void DisplayUpdate(const DateTime& dt);
 DateTime rightnow(16,12,18,16,2,15);
 DateTime last, now;
 TimeSpan seconds(1);
-#define MAXSTAMP 20
+#define MAXSTAMP 40
 uint32_t stamps[MAXSTAMP];
 uint8_t stampcounter;
-uint32_t intime;
+uint32_t intime, intime_print;
 
 void setup(){
   gb.begin();
@@ -38,6 +38,7 @@ void setup(){
   #endif
   stampcounter = 0;
   intime = 0;
+  intime_print = 0;
 }
 
 void loop(){
@@ -57,6 +58,9 @@ void loop(){
       #else
       rightnow = rightnow + seconds;
       #endif
+      if((stampcounter%2 == 1)){
+        intime_print += 1;
+      }
     }
     if(gb.buttons.pressed(BTN_A)){
       #ifndef DEMO
@@ -76,7 +80,6 @@ void loop(){
     }
     if(gb.buttons.held(BTN_B,FPS*3)){
       gb.popup(F("Saved to SD (not)"), FPS);
-
     }
     DisplayUpdate(rightnow);
   }

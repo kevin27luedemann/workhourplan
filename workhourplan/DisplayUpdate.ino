@@ -32,6 +32,13 @@ void DisplayUpdate(const DateTime& dt){
   gb.display.print(F(":"));
   gb.display.print((intime%60));
   gb.display.print(F("\n"));
+  gb.display.print(F("In Time_c: "));
+  gb.display.print((uint8_t)(intime_print/3600));
+  gb.display.print(F(":"));
+  gb.display.print((uint8_t)(intime_print/60%60));
+  gb.display.print(F(":"));
+  gb.display.print((intime_print%60));
+  gb.display.print(F("\n"));
   gb.display.print(F("Pause left: "));
   gb.display.println((uint8_t)(MAXSTAMP/2)-(uint8_t)(stampcounter/2));
   gb.display.print(F("Clock Status: "));
